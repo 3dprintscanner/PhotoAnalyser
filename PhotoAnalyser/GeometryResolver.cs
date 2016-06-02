@@ -46,11 +46,6 @@ namespace PhotoAnalyser
             return mat;
 
         }
-
         
-        public Tuple<int,int> GetPixelIndex(double lat, double longitude, Tuple<decimal,decimal> pitch )
-        {
-            
-        }
     }
 }

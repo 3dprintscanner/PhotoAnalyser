@@ -15,13 +15,19 @@ namespace PhotoAnalyser
             _properties = properties;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="lat"></param>
+        /// <param name="lng"></param>
+        /// <returns></returns>
         public Tuple<int, int> GetPixelIndex(decimal lat, decimal lng)
         {
             // is the latlong within the image bounds??
             if (lat <= _properties.Lowerleftlatitude || lat >= _properties.Upperleftlatitude ||
                 lng <= _properties.Lowerleftlongitude || lng >= _properties.Lowerrightlongitude)
             {
-                throw new OutOfBoundsException($"{lat} - {lng}");
+                throw new OutOfBoundsException(String.Format("{0} - {1}", lat, lng));
             }
 
             var latFromBottom = lat - _properties.Lowerleftlatitude;
@@ -36,6 +42,7 @@ namespace PhotoAnalyser
         public Matrix GetIntermediaryPixelSet(Tuple<decimal, decimal> bottomLeft, Tuple<decimal, decimal> topRight)
         {
             // get the start index of the pixels and get the number of rows/cols needed
+            throw new NotImplementedException();
         }
 
         

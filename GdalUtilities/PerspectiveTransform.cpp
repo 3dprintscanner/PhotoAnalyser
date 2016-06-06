@@ -49,7 +49,7 @@ void SortCorners(vector<Point2f>& corner_points, Point2f center_point){
 
 	vector<Point2f> top, bot;
 
-	for (int i = 0; i < corner_points.size(); ++i)
+	for (int i = 0; i < corner_points.size(); i++)
 	{
 		if (corner_points[i].y < center_point.y)
 		{
@@ -97,9 +97,9 @@ int main(int argc, char* argv[])
 
 	vector<Point2f> corner_points;
 
-	for (int i = 0; i < lines.size(); ++i)
+	for (int i = 0; i < lines.size(); i++)
 	{
-		for (int j = i+1; j < lines.size(); ++j)
+		for (int j = i+1; j < lines.size(); j++)
 		{
 			Point2f pnt = ComputeIntersect(lines[i], lines[j]);
 			if (pnt.x >= 0 && pnt.y >= 0) corner_points.push_back(pnt);
@@ -119,13 +119,16 @@ int main(int argc, char* argv[])
 	// get center point, average the points
 
 
-	for (int i = 0; i < corner_points.size(); ++i)
+	for (int i = 0; i < corner_points.size(); i++)
 	{
 		center_point += corner_points[i];
 		
 	}
 	center_point *= (1. / corner_points.size());
 
+	SortCorners(corner_points, center_point);
+
+	// draw lines
 
 	for (int i = 0; i < corner_points.size(); ++i)
 	{

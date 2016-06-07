@@ -64,28 +64,28 @@ void onMouse(int evnt, int x, int y, int, void*)
 		
 }
 
-int main(int argc, char* argv[])
-{
-	image = imread("C:\\Users\\anthony\\opencv\\opencv\\sources\\doc\\tutorials\\imgproc\\threshold\\images\\Threshold_Tutorial_Original_Image.jpg", CV_LOAD_IMAGE_COLOR);
-	image_orig = image.clone();
-
-	image1 = image.clone();
-
-	namedWindow("image");
-
-	imshow("image", image);
-
-	createTrackbar("lo_diff", "image", &lodiff, 255, 0);
-	createTrackbar("up_diff", "image", &upDiff, 255, 0);
-	createTrackbar("lo_canny", "image", &loCanny, 255, 0);
-	createTrackbar("up_canny", "image", &upCanny, 255, 0);
-
-	setMouseCallback("image", onMouse, nullptr);
-
-	cout << "Press Any key to Exit" << endl;
-
-	waitKey();
-
-	return 0;
-}
+//int main(int argc, char* argv[])
+//{
+//	image = imread("C:\\Users\\anthony\\opencv\\opencv\\sources\\doc\\tutorials\\imgproc\\threshold\\images\\Threshold_Tutorial_Original_Image.jpg", CV_LOAD_IMAGE_COLOR);
+//	image_orig = image.clone();
+//
+//	image1 = image.clone();
+//
+//	namedWindow("image");
+//
+//	imshow("image", image);
+//
+//	createTrackbar("lo_diff", "image", &lodiff, 255, 0);
+//	createTrackbar("up_diff", "image", &upDiff, 255, 0);
+//	createTrackbar("lo_canny", "image", &loCanny, 255, 0);
+//	createTrackbar("up_canny", "image", &upCanny, 255, 0);
+//
+//	setMouseCallback("image", onMouse, nullptr);
+//
+//	cout << "Press Any key to Exit" << endl;
+//
+//	waitKey();
+//
+//	return 0;
+//}
 

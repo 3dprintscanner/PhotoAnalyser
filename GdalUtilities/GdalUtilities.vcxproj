@@ -55,6 +55,7 @@
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_USRDLL;GDALUTILITIES_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -86,16 +87,21 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ColourTransfer.h" />
+    <ClInclude Include="ConnectedComponents.h" />
     <ClInclude Include="Contrast.h" />
+    <ClInclude Include="FloodFill.h" />
     <ClInclude Include="GdalTiff.h" />
     <ClInclude Include="Histogram.h" />
     <ClInclude Include="ImageBlend.h" />
+    <ClInclude Include="Linedetection.h" />
     <ClInclude Include="PerspectiveTransform.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
+    <ClInclude Include="Thresholding.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ColourTransfer.cpp" />
+    <ClCompile Include="ConnectedComponents.cpp" />
     <ClCompile Include="Contrast.cpp" />
     <ClCompile Include="dllmain.cpp">
       <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</CompileAsManaged>
@@ -105,15 +111,18 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
       </PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="FloodFill.cpp" />
     <ClCompile Include="GdalTiff.cpp" />
     <ClCompile Include="GdalUtilities.cpp" />
     <ClCompile Include="Histogram.cpp" />
     <ClCompile Include="ImageBlend.cpp" />
+    <ClCompile Include="Linedetection.cpp" />
     <ClCompile Include="PerspectiveTransform.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="Thresholding.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

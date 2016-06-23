@@ -41,9 +41,10 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>C:\Users\anthony\opencv\opencv\build\include\;$(IncludePath)</IncludePath>
-    <LibraryPath>C:\Users\anthony\opencv\opencv\build\x86\vc12\staticlib;C:\Users\anthony\opencv\opencv\build\x86\vc12\lib;$(LibraryPath)</LibraryPath>
+    <IncludePath>C:\Users\anthony\opencv\build\install\include\;$(IncludePath)</IncludePath>
+    <LibraryPath>C:\Users\anthony\opencv\opencv\build\install\x86\vc12\staticlib;C:\Users\anthony\opencv\build\install\x86\vc12\lib;$(LibraryPath)</LibraryPath>
     <TargetExt>.exe</TargetExt>
+    <ExecutablePath>C:\Users\anthony\opencv\build\install\x86\vc12\bin;$(ExecutablePath)</ExecutablePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
@@ -55,12 +56,12 @@
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_USRDLL;GDALUTILITIES_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
-      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>opencv_ts300d.lib;opencv_world300d.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>opencv_bgsegm310d.lib;opencv_calib3d310d.lib;opencv_ccalib310d.lib;opencv_core310d.lib;opencv_datasets310d.lib;opencv_dnn310d.lib;opencv_dpm310d.lib;opencv_face310d.lib;opencv_features2d310d.lib;opencv_flann310d.lib;opencv_fuzzy310d.lib;opencv_highgui310d.lib;opencv_imgcodecs310d.lib;opencv_imgproc310d.lib;opencv_line_descriptor310d.lib;opencv_ml310d.lib;opencv_objdetect310d.lib;opencv_optflow310d.lib;opencv_photo310d.lib;opencv_plot310d.lib;opencv_reg310d.lib;opencv_rgbd310d.lib;opencv_saliency310d.lib;opencv_shape310d.lib;opencv_stereo310d.lib;opencv_stitching310d.lib;opencv_structured_light310d.lib;opencv_superres310d.lib;opencv_surface_matching310d.lib;opencv_text310d.lib;opencv_tracking310d.lib;opencv_ts310d.lib;opencv_video310d.lib;opencv_videoio310d.lib;opencv_videostab310d.lib;opencv_xfeatures2d310d.lib;opencv_ximgproc310d.lib;opencv_xobjdetect310d.lib;opencv_xphoto310d.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalOptions>
       </AdditionalOptions>
     </Link>
@@ -86,14 +87,18 @@
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="CascadeDetection.h" />
     <ClInclude Include="ColourTransfer.h" />
     <ClInclude Include="ConnectedComponents.h" />
     <ClInclude Include="Contrast.h" />
+    <ClInclude Include="FastDetector.h" />
     <ClInclude Include="FloodFill.h" />
     <ClInclude Include="GdalTiff.h" />
+    <ClInclude Include="Grabcut.h" />
     <ClInclude Include="Histogram.h" />
     <ClInclude Include="ImageBlend.h" />
     <ClInclude Include="Linedetection.h" />
+    <ClInclude Include="MatchDescriptor.h" />
     <ClInclude Include="PerspectiveTransform.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
@@ -101,6 +106,7 @@
     <ClInclude Include="Watershed.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="CascadeDetection.cpp" />
     <ClCompile Include="ColourTransfer.cpp" />
     <ClCompile Include="ConnectedComponents.cpp" />
     <ClCompile Include="Contrast.cpp" />
@@ -112,12 +118,15 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
       </PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="FastDetector.cpp" />
     <ClCompile Include="FloodFill.cpp" />
     <ClCompile Include="GdalTiff.cpp" />
     <ClCompile Include="GdalUtilities.cpp" />
+    <ClCompile Include="Grabcut.cpp" />
     <ClCompile Include="Histogram.cpp" />
     <ClCompile Include="ImageBlend.cpp" />
     <ClCompile Include="Linedetection.cpp" />
+    <ClCompile Include="MatchDescriptor.cpp" />
     <ClCompile Include="PerspectiveTransform.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
@@ -125,6 +134,10 @@
     </ClCompile>
     <ClCompile Include="Thresholding.cpp" />
     <ClCompile Include="Watershed.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="newimg.bmp" />
+    <Image Include="newimg.jpg" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

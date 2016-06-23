@@ -57,6 +57,18 @@
     <ClInclude Include="Watershed.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Grabcut.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="FastDetector.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="MatchDescriptor.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="CascadeDetection.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -101,5 +113,25 @@
     <ClCompile Include="Watershed.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Grabcut.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="FastDetector.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="MatchDescriptor.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="CascadeDetection.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="newimg.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="newimg.jpg">
+      <Filter>Resource Files</Filter>
+    </Image>
   </ItemGroup>
 </Project>

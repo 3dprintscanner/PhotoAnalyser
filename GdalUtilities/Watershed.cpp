@@ -67,19 +67,19 @@ void Watershed(const Mat &src)
 }
 
 
-int main(int argc, char* argv[])
-{
-	Mat src = imread("C:\\Users\\anthony\\Downloads\\image1.png", IMREAD_COLOR);
-
-	namedWindow("Source", WINDOW_AUTOSIZE);
-
-	imshow("Source", src);
-
-	Watershed(src);
-
-	cout << "Press Any Key to Exit" << endl;
-
-	waitKey();
-
-	return 0;
-}
+//int main(int argc, char* argv[])
+//{
+//	Mat src = imread("C:\\Users\\anthony\\Downloads\\image1.png", IMREAD_COLOR);
+//
+//	namedWindow("Source", WINDOW_AUTOSIZE);
+//
+//	imshow("Source", src);
+//
+//	Watershed(src);
+//
+//	cout << "Press Any Key to Exit" << endl;
+//
+//	waitKey();
+//
+//	return 0;
+//}

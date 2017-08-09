@@ -35,7 +35,8 @@ float TifReader::GetPixelValue(const int& x, const int& y)
 {
 	float f;
 	
-	raster_band->RasterIO(GF_Read,)
+	return f;
+	//raster_band->RasterIO(GF_Read,)
 }
 
 

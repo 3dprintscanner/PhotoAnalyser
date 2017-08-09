@@ -60,6 +60,27 @@ void maxMovementLK(Mat& prev_frame, Mat& frame){
 
 }
 
+
+void trackingMeanShift(Mat& img, Rect search_window){
+
+
+	TermCriteria criteria(TermCriteria::COUNT | TermCriteria::EPS, 10,1);
+
+	meanShift(img, search_window, criteria);
+	rectangle(img, search_window, Scalar(0, 255, 0), 3);
+
+}
+
+void trackingCamShift(Mat& img, Rect search_window){
+	TermCriteria criteria(TermCriteria::COUNT | TermCriteria::EPS, 10, 1);
+
+	RotatedRect found_object = CamShift(img, search_window, criteria);
+
+	Rect found_rect = found_object.boundingRect();
+
+	rectangle(img, found_rect, Scalar(0, 255, 0), 3);
+}
+
 int videoCamera(){
 
 	VideoCapture capture(0);
@@ -82,9 +103,14 @@ int videoCamera(){
 		if (!capture.read(frame)) return 1;
 		cvtColor(frame, frame, COLOR_BGR2GRAY);
 
-		imshow("Video Camera", frame);
 
-		maxMovementLK(prev_frame, frame);
+		//maxMovementLK(prev_frame, frame);
+
+		Rect search_window(200, 150, 100, 100);
+		trackingMeanShift(frame, search_window);
+		//trackingCamShift(frame, search_window);
+
+		imshow("Video Camera", frame);
 
 		if (waitKey(1) == 27) finish = true;
 

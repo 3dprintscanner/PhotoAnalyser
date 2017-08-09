@@ -69,6 +69,9 @@
     <ClInclude Include="CascadeDetection.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="ObjectDetection.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -125,6 +128,9 @@
     <ClCompile Include="CascadeDetection.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="ObjectDetection.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Image Include="newimg.bmp">
@@ -133,5 +139,9 @@
     <Image Include="newimg.jpg">
       <Filter>Resource Files</Filter>
     </Image>
+  </ItemGroup>
+  <ItemGroup>
+    <Xml Include="..\..\..\..\..\opencv\data\haarcascades\haarcascade_eye.xml" />
+    <Xml Include="..\..\..\..\..\opencv\data\haarcascades\haarcascade_frontalface_default.xml" />
   </ItemGroup>
 </Project>

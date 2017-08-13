@@ -33,7 +33,7 @@ void TifReader::GetRasterBand(int bandId)
 
 float TifReader::GetPixelValue(const int& x, const int& y)
 {
-	float f;
+	float f = 0.0;
 	
 	return f;
 	//raster_band->RasterIO(GF_Read,)

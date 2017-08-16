@@ -1,10 +1,16 @@
 #include "stdafx.h"
 #include "opencv2/opencv.hpp"
 #include "opencv2/core.hpp"
+
 #include "opencv2/tracking.hpp"
 #include "opencv2/imgproc.hpp"
 #include "opencv2/optflow/motempl.hpp"
 #include "opencv2/ml/ml.hpp"
+#include "opencv2/features2d/features2d.hpp"
+#include "opencv2/xfeatures2d/nonfree.hpp"
+#include "opencv2/xfeatures2d/cuda.hpp"
+#include "opencv2/cudastereo.hpp"
+#include "opencv2/cudaimgproc.hpp"
 
 #include <string>
 #include <ctime>
@@ -15,6 +21,8 @@
 using namespace cv;
 using namespace std;
 using namespace ml;
+using namespace xfeatures2d;
+using namespace cuda;
 
 
 clock_t INITIAL_TIME;
@@ -191,7 +199,7 @@ int findCameraMovement(){
 	while (!follow){
 		if (!capture.read(initial_frame)) return 1;
 
-		cvtColor(initial_frame, initial_frame, COLOR_BGR2GRAY);
+		cv::cvtColor(initial_frame, initial_frame, COLOR_BGR2GRAY);
 
 		aux_initial_frame = initial_frame.clone();
 
@@ -216,7 +224,7 @@ int findCameraMovement(){
 
 		if (!capture.read(frame)) return 1;
 
-		cvtColor(frame, frame, COLOR_BGR2GRAY);
+		cv::cvtColor(frame, frame, COLOR_BGR2GRAY);
 
 		try{
 			findTransformECC(template_frame, frame, warp_matrix, warp_mode, criteria);
@@ -258,13 +266,13 @@ int videoCamera(){
 
 	if (!capture.read(prev_frame)) return 1;
 
-	cvtColor(prev_frame, prev_frame, COLOR_BGR2GRAY);
+	cv::cvtColor(prev_frame, prev_frame, COLOR_BGR2GRAY);
 
 	Mat history(prev_frame.rows, prev_frame.cols, CV_32FC1);
 
 	while (!finish){
 		if (!capture.read(frame)) return 1;
-		cvtColor(frame, frame, COLOR_BGR2GRAY);
+		cv::cvtColor(frame, frame, COLOR_BGR2GRAY);
 
 
 		//maxMovementLK(prev_frame, frame);
@@ -456,6 +464,89 @@ int randomForest(){
 }
 
 
+void doSVM(){
+	Mat groups, samples;
+
+	vector<KeyPoint> keypointst1;
+
+	Ptr<ORB> orbDetector = ORB::create(15, 1.2f, 2, 31, 0, 2, ORB::HARRIS_SCORE, 31);
+
+	Mat descriptors, descriptors2;
+
+	Ptr<SURF> surf = SURF::create();
+
+
+	for (int i = 0; i <= 56; i++)
+	{
+		// compute SURF descriptors for each image
+		
+		stringstream nn;
+		nn << i << ".png";
+		Mat img = imread(nn.str());
+		cv::cvtColor(img, img, COLOR_BGR2GRAY);
+		orbDetector->detect(img,keypointst1);
+		surf->compute(img, keypointst1, descriptors);
+		samples.push_back(descriptors.reshape(1, 1));
+		keypointst1.clear();
+	};
+
+	//Set the labels of each sample
+	for (int j = 1; j <= 56; j++){
+		if (j <= 14)  groups.push_back(1);
+		else if (j > 14 && j <= 28)  groups.push_back(2);
+		else if (j > 28 && j <= 42)  groups.push_back(3);
+		else groups.push_back(4);
+	}
+
+		Ptr<SVM> svm = SVM::create();
+
+		svm->setTermCriteria(TermCriteria(CV_TERMCRIT_ITER + CV_TERMCRIT_EPS, 100, FLT_EPSILON));
+
+		Ptr<TrainData> trainingData = TrainData::create(samples, ROW_SAMPLE, groups);
+		
+		svm->train(trainingData);
+
+		for (int i = 0; i <=10; i++)
+		{
+			stringstream nn;
+			nn << "unknown" << i << ".png";
+			Mat unknown = imread(nn.str());
+
+			cv::cvtColor(unknown, unknown, COLOR_BGR2GRAY);
+
+			orbDetector->detect(unknown, keypointst1);
+			surf->compute(unknown, keypointst1, descriptors2);
+
+			float result = svm->predict(descriptors2.reshape(1, 1));
+
+			cout << nn.str() << " class :" << result << endl;
+		}
+
+	
+}
+
+void doGPUEdges(){
+	Mat orig = imread("C:\\Users\\anthony\\opencv\\samples\\data\\baboon.jpg", CV_LOAD_IMAGE_COLOR);
+
+	GpuMat g_orig, g_gray, g_dst;
+
+	g_orig.upload(orig);
+
+	cuda::bilateralFilter(g_orig, g_dst, -1,50, 7);
+	cuda::cvtColor(g_dst, g_gray, COLOR_BGR2GRAY);
+	Ptr<cuda::CannyEdgeDetector> canny = createCannyEdgeDetector(7, 20);
+
+	canny->detect(g_gray, g_gray);
+
+	Mat dst;
+
+	g_gray.download(dst);
+
+	imshow("Canny Filter",dst);
+
+	waitKey(0);
+
+}
 
 
 int main(int argc, const char * argv[]){
@@ -463,5 +554,7 @@ int main(int argc, const char * argv[]){
 	//backGroundSubKNN();
 	//findCameraMovement();
 	//doKNN();
-	randomForest();
+	//randomForest();
+	//doSVM();
+	doGPUEdges();
 }

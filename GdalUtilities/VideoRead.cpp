@@ -5,8 +5,12 @@
 #include "opencv2/imgproc.hpp"
 #include "opencv2/optflow/motempl.hpp"
 #include "opencv2/ml/ml.hpp"
+
+#include <string>
 #include <ctime>
 #include <vector>
+#include <fstream>
+
 
 using namespace cv;
 using namespace std;
@@ -14,6 +18,10 @@ using namespace ml;
 
 
 clock_t INITIAL_TIME;
+
+#ifdef _MSC_VER
+#define _CRT_SECURE_NO_WARNINGS
+#endif
 
 void maxMovementLK(Mat& prev_frame, Mat& frame){
 	vector<Point2f> initial_features;
@@ -280,6 +288,20 @@ int videoCamera(){
 
 }
 
+void thisSplit(const string &s, const char* delim, vector<string> & v){
+	// to avoid modifying original string
+	// first duplicate the original string and return a char pointer then free the memory
+	char * dup = _strdup(s.c_str());
+	char * token = strtok(dup, delim);
+	while (token != NULL){
+		v.push_back(string(token));
+		// the call is treated as a subsequent calls to strtok:
+		// the function continues from where it left in previous invocation
+		token = strtok(NULL, delim);
+	}
+	free(dup);
+}
+
 
 int doKNN(){
 	Mat classes(5 , 1, CV_32FC1);
@@ -297,6 +319,9 @@ int doKNN(){
 	colours.at<float>(3, 0) = 0;
 	colours.at<float>(3, 1) = 255;
 	colours.at<float>(3, 2) = 0;
+	colours.at<float>(4, 0) = 0;
+	colours.at<float>(4, 1) = 0;
+	colours.at<float>(4, 2) = 255;
 
 
 	classes.at<float>(0, 0) = 1;
@@ -333,7 +358,6 @@ int doKNN(){
 			newPoint.at<float>(0, 1) = src.at<Vec3b>(y, x)[1];
 			newPoint.at<float>(0, 2) = src.at<Vec3b>(y, x)[2];
 
-
 			prediction = classifier->findNearest(newPoint, 1, results);
 
 			dst.at<Vec3b>(y, x)[0] = colours.at <float>(prediction - 1, 0);
@@ -350,9 +374,94 @@ int doKNN(){
 
 }
 
+int randomForest(){
+	Ptr<RTrees> trees = RTrees::create();
+	// random forest, take the csv file and take the first n elements as lengths and the classifications 
+
+	ifstream file;
+
+	vector<Vec4b> iris_data;
+	Mat iris_matrix(0,0,CV_32F);
+	Mat iris_classes(0,0, CV_32F);
+	string line;
+
+	
+	file.open("C:\\Users\\anthony\\Documents\\Visual Studio 2013\\Projects\\PhotoAnalyser\\iris.csv");
+
+	if (file.is_open()){
+		while (std::getline(file, line)){
+
+			vector<string> items;
+
+			thisSplit(line, ",", items);
+			if (items.size() < 5) continue;
+			float item0 = atof(items[0].c_str());
+			float item1 = atof(items[1].c_str());
+			float item2 = atof(items[2].c_str());
+			float item3 = atof(items[3].c_str());
+			//iris_data.push_back(Vec4b(item0, item1, item2, item3));
+			Mat row(1, 4, CV_32F);
+			row.at<float>(0, 0) = item0;
+			row.at<float>(0, 1) = item1;
+			row.at<float>(0, 2) = item2;
+			row.at<float>(0, 3) = item3;
+			iris_matrix.push_back(row);
+		}
+	}
+
+	file.close();
+	// assign values to the classes
+	
+	/*for (int i = 0; i < iris_data.size(); i++)
+	{
+		iris_matrix.at<Vec4b>(i, 0) = iris_data.at(i);
+	};*/
+
+
+	for (int i = 0; i < iris_matrix.rows; i++)
+	{
+		if (i <= 50){
+			iris_classes.push_back(1);
+			//iris_classes.at<float>(i, 0) = 1;
+		}
+		else if (i > 50 && i <= 100){
+			iris_classes.push_back(2);
+			//iris_classes.at<float>(i, 0) = 2;
+		}
+		else{
+			iris_classes.push_back(3);
+			//iris_classes.at<float>(i, 0) = 3;
+		}
+	}
+
+	// generalised form of input a matrix of values by row, use the classes to define the class for each row
+
+
+	
+	Ptr<TrainData> data = TrainData::create(iris_matrix, ROW_SAMPLE, iris_classes);
+
+	trees->train(data);
+
+	Mat err;
+	trees->calcError(data, true, err);
+
+	// write out each error
+
+	for (int i = 0; i < err.rows; i++)
+	{
+		cout << err.at<float>(i, 0) << endl;
+	};
+
+	return 1;
+}
+
+
+
+
 int main(int argc, const char * argv[]){
 	//videoCamera();
 	//backGroundSubKNN();
 	//findCameraMovement();
-	doKNN();
+	//doKNN();
+	randomForest();
 }

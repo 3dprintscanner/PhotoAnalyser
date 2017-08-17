@@ -11,6 +11,7 @@
 #include "opencv2/xfeatures2d/cuda.hpp"
 #include "opencv2/cudastereo.hpp"
 #include "opencv2/cudaimgproc.hpp"
+#include "opencv2/cudafeatures2d.hpp"
 
 #include <string>
 #include <ctime>
@@ -469,7 +470,7 @@ void doSVM(){
 
 	vector<KeyPoint> keypointst1;
 
-	Ptr<ORB> orbDetector = ORB::create(15, 1.2f, 2, 31, 0, 2, ORB::HARRIS_SCORE, 31);
+	Ptr<cv::ORB> orbDetector = cv::ORB::create(15, 1.2f, 2, 31, 0, 2, cv::ORB::HARRIS_SCORE, 31);
 
 	Mat descriptors, descriptors2;
 
@@ -549,6 +550,117 @@ void doGPUEdges(){
 }
 
 
+int doTemplateGPU(){
+	Mat img_template_cpu = imread("C:\\Users\\anthony\\opencv\\samples\\data\\baboon.jpg", IMREAD_GRAYSCALE);
+
+
+	GpuMat img_template;
+
+	img_template.upload(img_template_cpu);
+
+
+	cuda::SURF_CUDA gpu_surf;
+
+	GpuMat keypoints_template, descriptors_template;
+
+	gpu_surf(img_template, GpuMat(), keypoints_template, descriptors_template);
+
+
+	Ptr<cuda::DescriptorMatcher> matcher = cuda::DescriptorMatcher::createBFMatcher(NORM_L2);
+
+	GpuMat img_frame, img_frame_gray;
+
+	Mat img_frame_aux;
+
+	VideoCapture cap;
+
+	cap.open(0);
+
+	if (!cap.isOpened()){
+		cerr << "Capture not opened" << endl;
+		return -1;
+	}
+
+	int nFrames = 0;
+	uint64 totalTime = 0;
+
+	while (true){
+		int64 start = getTickCount();
+
+		// get image
+		
+		cap >> img_frame_aux;
+		if (img_frame_aux.empty()){
+			break;
+		}
+
+		img_frame.upload(img_frame_aux);
+
+
+		// compute descriptors
+
+		cuda::cvtColor(img_frame, img_frame_gray, CV_BGR2GRAY);
+
+		GpuMat keypoints_frame, descriptors_frame;
+
+		gpu_surf(img_frame_gray, GpuMat(), keypoints_frame, descriptors_frame);
+
+		vector<vector<DMatch>> matches;
+
+		matcher->knnMatch(descriptors_template, descriptors_frame, matches, 2);
+
+		vector<DMatch> good_matches;
+		float ratioT = 0.7f;
+
+		// find nearby matches
+
+		for (int i = 0; i < matches.size(); i++)
+		{
+			if (matches[i][0].distance < ratioT * (matches[i][1].distance) && ((int)matches[i].size() <= 2 && (int)matches[i].size() >0)){
+				good_matches.push_back(matches[i][0]);
+			}
+		}
+
+		vector<KeyPoint> keypoints1, keypoints2;
+
+		vector<float> descriptors1, descriptors2;
+
+		gpu_surf.downloadKeypoints(keypoints_template, keypoints1);
+		gpu_surf.downloadKeypoints(keypoints_frame, keypoints2);
+		gpu_surf.downloadDescriptors(descriptors_template, descriptors1);
+		gpu_surf.downloadDescriptors(descriptors_frame, descriptors2);
+
+		Mat img_result_matches;
+
+		drawMatches(img_template_cpu, keypoints1, img_frame_aux, keypoints2, good_matches, img_result_matches);
+
+		imshow("Matching template", img_result_matches);
+
+		int64 time_elapsed = getTickCount() - start;
+
+		double fps = getTickFrequency() / time_elapsed;
+
+		totalTime += time_elapsed;
+
+		nFrames++;
+
+		cout << "FPS : " << fps << endl;
+
+		int key = waitKey(30);
+
+		if (key == 27){
+			break;
+		}
+
+	}
+
+	double meanFps = getTickFrequency() / (totalTime / nFrames);
+
+	cout << "Mean FPS : " << meanFps << endl;
+	return 0;
+}
+
+
 int main(int argc, const char * argv[]){
 	//videoCamera();
 	//backGroundSubKNN();
@@ -556,5 +668,6 @@ int main(int argc, const char * argv[]){
 	//doKNN();
 	//randomForest();
 	//doSVM();
-	doGPUEdges();
+	//doGPUEdges();
+	doTemplateGPU();
 }

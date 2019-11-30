@@ -1,4 +1,4 @@
-#pragma once
+//#pragma once
 //#include "stdafx.h"
 //#include "ObjectDetection.h"
 //#include "opencv2/highgui/highgui.hpp"

@@ -661,13 +661,13 @@ int doTemplateGPU(){
 }
 
 
-int main(int argc, const char * argv[]){
-	//videoCamera();
-	//backGroundSubKNN();
-	//findCameraMovement();
-	//doKNN();
-	//randomForest();
-	//doSVM();
-	//doGPUEdges();
-	doTemplateGPU();
-}
+//int main(int argc, const char * argv[]){
+//	//videoCamera();
+//	//backGroundSubKNN();
+//	//findCameraMovement();
+//	//doKNN();
+//	//randomForest();
+//	//doSVM();
+//	doGPUEdges();
+//	//doTemplateGPU();
+//}

@@ -158,6 +158,7 @@
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="CarDetector.h" />
     <ClInclude Include="CascadeDetection.h" />
     <ClInclude Include="ColourTransfer.h" />
     <ClInclude Include="ConnectedComponents.h" />
@@ -180,6 +181,7 @@
     <ClInclude Include="Watershed.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="CarDetector.cpp" />
     <ClCompile Include="CascadeDetection.cpp" />
     <ClCompile Include="ColourTransfer.cpp" />
     <ClCompile Include="ConnectedComponents.cpp" />
